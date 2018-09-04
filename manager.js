@@ -77,9 +77,9 @@ function newProduct() {
             stock: parseInt(response.stock),
             price: parseFloat(response.price)
         }
-        connection.query("INSERT INTO products SET ?", product, function (err, res) {
+        connection.query("INSERT INTO products SET ?", product, (err, res) => {
             if (err) throw err;
-            console.log(reponse.stock + " units of " + response.name + " added to " + response.dept);
+            console.log(product.stock + " units of " + product.product_name + " added to " + product.department_name);
             mainMenu();
         });
     })
