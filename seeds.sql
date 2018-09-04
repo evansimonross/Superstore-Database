@@ -20,4 +20,11 @@ INSERT INTO products (product_name, department_name, price, stock)
 INSERT INTO products (product_name, department_name, price, stock)
     VALUES ('Zero-purpose Ointment', 'Pharmacy', 4.99, 9999);
 
+INSERT INTO departments (department_name, overhead_costs) VALUES ('Pharmacy', 150000);
+INSERT INTO departments (department_name, overhead_costs) VALUES ('Foodstuff', 250000);
+INSERT INTO departments (department_name, overhead_costs) VALUES ('Office Supplies', 75000);
+INSERT INTO departments (department_name, overhead_costs) VALUES ('Software', 125000);
+INSERT INTO departments (department_name, overhead_costs) VALUES ('Clothing', 450000);
+INSERT INTO departments (department_name, overhead_costs) VALUES ('Footwear', 55000);
+INSERT INTO departments (department_name, overhead_costs) VALUES ('Electronics', 850000);
 

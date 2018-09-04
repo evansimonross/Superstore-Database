@@ -82,7 +82,7 @@ function buy(item) {
             mainMenu();
         }
         else {
-            connection.query("UPDATE products SET ? WHERE ?", [{ stock: item.stock - amount }, { item_id: item.item_id }], function (err, res) {
+            connection.query("UPDATE products SET ? WHERE ?", [{ stock: item.stock - amount, product_sales: item.product_sales + (amount*item.price) }, { item_id: item.item_id }], function (err, res) {
                 if (err) throw err;
                 console.log("That will be $" + (amount * item.price).toFixed(2));
                 mainMenu();
