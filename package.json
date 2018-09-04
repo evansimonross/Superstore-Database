@@ -1,0 +1,24 @@
+{
+  "name": "Superstore-Database",
+  "version": "1.0.0",
+  "description": "Homework assignment to practice MySQL databases and interacting with them via Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evansimonross/Superstore-Database.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/evansimonross/Superstore-Database/issues"
+  },
+  "homepage": "https://github.com/evansimonross/Superstore-Database#readme",
+  "dependencies": {
+    "dotenv": "^6.0.0",
+    "inquirer": "^6.2.0"
+  }
+}
