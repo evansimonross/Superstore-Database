@@ -26,7 +26,6 @@ connection.connect(function (err) {
 
 function afterConnection() {
     products();
-    inquirePurchase();
 }
 
 function inquirePurchase() {
@@ -36,12 +35,34 @@ function inquirePurchase() {
             message: 'Which item would you like to buy?',
             name: 'item'
         }
-    ]).then(function (res) {
-        var itemId = parseInt(res.item);
+    ]).then(function (response) {
+        var itemId = parseInt(response.item);
         if(itemIds.includes(itemId)){
-            connection.query("SELECT product_name FROM products WHERE ? ", {item_id: itemId} , function (err, res) {
+            connection.query("SELECT * FROM products WHERE ?", {item_id: itemId} , function (err, res) {
                 if (err) throw err;
-                console.log(res[0].product_name);
+                buy(res[0]);
+            });
+        }
+    });
+}
+
+function buy(item){
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: 'How many ' + item.product_name + ' would you like to buy?',
+            name: 'amount'
+        }
+    ]).then(function (response) {
+        var amount = parseInt(response.amount);
+        if(amount > item.stock) {
+            console.log("There are not enough items in stock. Please choose a lower amount.");
+            buy(item);
+        }
+        else{
+            connection.query("UPDATE products SET ? WHERE ?", [{stock: item.stock - amount}, {item_id: item.item_id}], function (err, res) {
+                if (err) throw err;
+                console.log("That will be $" + (amount*item.price).toFixed(2));
             });
         }
     });
@@ -56,6 +77,7 @@ function products() {
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
         printItems(res);
+        inquirePurchase();
     });
 }
 
