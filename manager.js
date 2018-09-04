@@ -37,7 +37,7 @@ function mainMenu() {
             name: 'choice'
         }
     ]).then(function (response) {
-        switch(response.choice){
+        switch (response.choice) {
             case "view products": products(""); break;
             case "low inventory": products("WHERE stock < 5"); break;
             case "add stock": inquireRestock(); break;
@@ -46,6 +46,43 @@ function mainMenu() {
             default: mainMenu();
         }
     });
+}
+
+function newProduct() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: 'Product name?',
+            name: 'name'
+        },
+        {
+            type: 'input',
+            message: 'Department name?',
+            name: 'dept'
+        },
+        {
+            type: 'input',
+            message: 'Current stock?',
+            name: 'stock'
+        },
+        {
+            type: 'input',
+            message: 'Price per unit?',
+            name: 'price'
+        }
+    ]).then(function (response){
+        var product = {
+            product_name: response.name,
+            department_name: response.dept,
+            stock: parseInt(response.stock),
+            price: parseFloat(response.price)
+        }
+        connection.query("INSERT INTO products SET ?", product, function(err, res) {
+            if (err) throw err;
+            console.log(reponse.stock + " units of " + response.name + " added to " + response.dept);
+            mainMenu();
+        });
+    })
 }
 
 function inquireRestock() {
@@ -57,8 +94,8 @@ function inquireRestock() {
         }
     ]).then(function (response) {
         var itemId = parseInt(response.item);
-        if(itemIds.includes(itemId)){
-            connection.query("SELECT * FROM products WHERE ?", {item_id: itemId} , function (err, res) {
+        if (itemIds.includes(itemId)) {
+            connection.query("SELECT * FROM products WHERE ?", { item_id: itemId }, function (err, res) {
                 if (err) throw err;
                 restock(res[0]);
             });
@@ -66,7 +103,7 @@ function inquireRestock() {
     });
 }
 
-function restock(item){
+function restock(item) {
     inquirer.prompt([
         {
             type: 'input',
@@ -75,12 +112,12 @@ function restock(item){
         }
     ]).then(function (response) {
         var amount = parseInt(response.amount);
-        if(amount === 0){
+        if (amount === 0) {
             console.log("Nothing to restock.");
             mainMenu();
         }
-        else{
-            connection.query("UPDATE products SET ? WHERE ?", [{stock: item.stock + amount}, {item_id: item.item_id}], function (err, res) {
+        else {
+            connection.query("UPDATE products SET ? WHERE ?", [{ stock: item.stock + amount }, { item_id: item.item_id }], function (err, res) {
                 if (err) throw err;
                 mainMenu();
             });
@@ -88,7 +125,7 @@ function restock(item){
     });
 }
 
-function quit(){
+function quit() {
     console.log("Thanks for your patronage.");
     connection.end();
     process.exit();
@@ -115,7 +152,7 @@ function printItems(res) {
         var item = [];
         var item_id = res[i].item_id;
         itemIds.push(item_id);
-        var idl = item_id.length;
+        var idl = ("" + item_id).length;
         for (var j = 4; j > idl; j--) {
             item_id += " ";
         }

@@ -92,7 +92,7 @@ function buy(item) {
 }
 
 function quit() {
-    console.log("Thanks for your patronage.");
+    console.log("Thanks for your hard work.");
     connection.end();
     process.exit();
 }
@@ -118,7 +118,7 @@ function printItems(res) {
         var item = [];
         var item_id = res[i].item_id;
         itemIds.push(item_id);
-        var idl = item_id.length;
+        var idl = ("" + item_id).length;
         for (var j = 4; j > idl; j--) {
             item_id += " ";
         }
