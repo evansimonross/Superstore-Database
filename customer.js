@@ -25,7 +25,7 @@ connection.connect(function (err) {
 });
 
 function afterConnection() {
-    mainMenu();
+    products(true);
 }
 
 function mainMenu() {
@@ -37,9 +37,9 @@ function mainMenu() {
             name: 'choice'
         }
     ]).then(function (response) {
-        switch(response.choice){
+        switch (response.choice) {
             case "view products": products(); break;
-            case "buy a product": buy(); break;
+            case "buy a product": inquirePurchase(); break;
             case "quit": quit(); break;
             default: mainMenu();
         }
@@ -55,16 +55,16 @@ function inquirePurchase() {
         }
     ]).then(function (response) {
         var itemId = parseInt(response.item);
-        if(itemIds.includes(itemId)){
-            connection.query("SELECT * FROM products WHERE ?", {item_id: itemId} , function (err, res) {
+        if (itemIds.includes(itemId)) {
+            connection.query("SELECT * FROM products WHERE ?", { item_id: itemId }, function (err, res) {
                 if (err) throw err;
-                mainMenu();
+                buy(res[0]);
             });
         }
     });
 }
 
-function buy(item){
+function buy(item) {
     inquirer.prompt([
         {
             type: 'input',
@@ -73,31 +73,43 @@ function buy(item){
         }
     ]).then(function (response) {
         var amount = parseInt(response.amount);
-        if(amount > item.stock) {
+        if (amount > item.stock) {
             console.log("There are not enough items in stock. Please choose a lower amount.");
             buy(item);
         }
-        else{
-            connection.query("UPDATE products SET ? WHERE ?", [{stock: item.stock - amount}, {item_id: item.item_id}], function (err, res) {
+        else if (amount === 0) {
+            console.log("No purchase made.");
+            mainMenu();
+        }
+        else {
+            connection.query("UPDATE products SET ? WHERE ?", [{ stock: item.stock - amount }, { item_id: item.item_id }], function (err, res) {
                 if (err) throw err;
-                console.log("That will be $" + (amount*item.price).toFixed(2));
-                mainMenu()
+                console.log("That will be $" + (amount * item.price).toFixed(2));
+                mainMenu();
             });
         }
     });
 }
 
-function quit(){
+function quit() {
     console.log("Thanks for your patronage.");
     connection.end();
     process.exit();
 }
 
 function products() {
-    connection.query("SELECT * FROM products", function (err, res) {
+    connection.query("SELECT * FROM products", (err, res) => {
         if (err) throw err;
-        printItems(res);
-        inquirePurchase();
+        if (arguments[0]) {
+            for (var i = 0; i < res.length; i++) {
+                var item_id = res[i].item_id;
+                itemIds.push(item_id);
+            }
+        }
+        else {
+            printItems(res);
+        }
+        mainMenu();
     });
 }
 
