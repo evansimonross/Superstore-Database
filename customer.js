@@ -25,7 +25,25 @@ connection.connect(function (err) {
 });
 
 function afterConnection() {
-    products();
+    mainMenu();
+}
+
+function mainMenu() {
+    inquirer.prompt([
+        {
+            type: 'list',
+            message: 'Welcome to SUPERSTORE! What would you like to do?',
+            choices: ['view products', 'buy a product', 'quit'],
+            name: 'choice'
+        }
+    ]).then(function (response) {
+        switch(response.choice){
+            case "view products": products(); break;
+            case "buy a product": buy(); break;
+            case "quit": quit(); break;
+            default: mainMenu();
+        }
+    });
 }
 
 function inquirePurchase() {
@@ -40,7 +58,7 @@ function inquirePurchase() {
         if(itemIds.includes(itemId)){
             connection.query("SELECT * FROM products WHERE ?", {item_id: itemId} , function (err, res) {
                 if (err) throw err;
-                buy(res[0]);
+                mainMenu();
             });
         }
     });
@@ -63,12 +81,14 @@ function buy(item){
             connection.query("UPDATE products SET ? WHERE ?", [{stock: item.stock - amount}, {item_id: item.item_id}], function (err, res) {
                 if (err) throw err;
                 console.log("That will be $" + (amount*item.price).toFixed(2));
+                mainMenu()
             });
         }
     });
 }
 
 function quit(){
+    console.log("Thanks for your patronage.");
     connection.end();
     process.exit();
 }
