@@ -126,7 +126,7 @@ function restock(item) {
 }
 
 function quit() {
-    console.log("Thanks for your patronage.");
+    console.log("Thanks for your hard work.");
     connection.end();
     process.exit();
 }

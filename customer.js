@@ -92,7 +92,7 @@ function buy(item) {
 }
 
 function quit() {
-    console.log("Thanks for your hard work.");
+    console.log("Thanks for your patronage.");
     connection.end();
     process.exit();
 }
