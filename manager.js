@@ -70,14 +70,14 @@ function newProduct() {
             message: 'Price per unit?',
             name: 'price'
         }
-    ]).then(function (response){
+    ]).then(function (response) {
         var product = {
             product_name: response.name,
             department_name: response.dept,
             stock: parseInt(response.stock),
             price: parseFloat(response.price)
         }
-        connection.query("INSERT INTO products SET ?", product, function(err, res) {
+        connection.query("INSERT INTO products SET ?", product, function (err, res) {
             if (err) throw err;
             console.log(reponse.stock + " units of " + response.name + " added to " + response.dept);
             mainMenu();
@@ -173,23 +173,27 @@ function printItems(res) {
         item.push(department_name);
 
         var price = "$" + res[i].price.toFixed(2);
-        if (price) {
-            price += "";
-            var prl = price.length;
-            for (var j = 10; j > prl; j--) {
-                price += " ";
-            }
-            item.push(price);
+        price += "";
+        var prl = price.length;
+        for (var j = 10; j > prl; j--) {
+            price += " ";
         }
+        item.push(price);
 
         var stock = "" + res[i].stock;
-        if (stock) {
-            var stl = stock.length;
-            for (var j = 6; j > stl; j--) {
-                stock += " ";
-            }
-            item.push(stock);
+        var stl = stock.length;
+        for (var j = 6; j > stl; j--) {
+            stock += " ";
         }
+        item.push(stock);
+
+        var product_sales = "$" + res[i].product_sales.toFixed(2);
+        var psl = product_sales.length;
+        for (var j = 15; j > psl; j--) {
+            product_sales + " ";
+        }
+        item.push(product_sales);
+
         console.log(item.join(" | "));
     }
 }

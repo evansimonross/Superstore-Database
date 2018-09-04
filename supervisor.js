@@ -82,6 +82,8 @@ function depts() {
 }
 
 function printDepts(res) {
+    console.log(" DEPT |      NAME       |    OVERHEAD     |      SALES      |     PROFIT")
+    console.log(" ---- | --------------- | --------------- | --------------- | ---------------")
     var dept_id = res[0].department_id;
     var dept_name = res[0].department_name;
     var overhead_costs = res[0].overhead_costs;
@@ -106,19 +108,22 @@ function printDepts(res) {
             }
             dept.push(dept_name);
 
+            var total_profit = "$" + (parseFloat(product_sales) - parseFloat(overhead_costs)).toFixed(2);
+
+            overhead_costs = "$" + overhead_costs.toFixed(2);
             var ocl = ("" + overhead_costs).length;
             for (var j = 15; j > ocl; j--) {
                 overhead_costs += " ";
             }
             dept.push(overhead_costs);
 
+            product_sales = "$" + product_sales.toFixed(2);
             var prl = ("" + product_sales).length;
             for (var j = 15; j > prl; j--) {
                 product_sales += " ";
             }
             dept.push(product_sales);
 
-            var total_profit = parseFloat(product_sales) - parseFloat(overhead_costs);
             var tpl = ("" + total_profit).length
             for (var j = 15; j > tpl; j--) {
                 total_profit += " ";
